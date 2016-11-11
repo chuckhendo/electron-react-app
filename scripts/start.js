@@ -20,6 +20,9 @@ var prompt = require('react-dev-utils/prompt');
 var config = require('../config/webpack.config.dev');
 var paths = require('../config/paths');
 
+var electronPath = require("electron");
+var spawn = require("child_process").spawn;
+
 // Warn and crash if required files are missing
 if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
   process.exit(1);
@@ -236,8 +239,12 @@ function runDevServer(host, port, protocol) {
     clearConsole();
     console.log(chalk.cyan('Starting the development server...'));
     console.log();
-    openBrowser(protocol + '://' + host + ':' + port + '/');
+    openElectron(protocol + '://' + host + ':' + port + '/');
   });
+}
+
+function openElectron(url) {
+    spawn(electronPath, ["."], { env: Object.assign({}, process.env, { ELECTRON_DEV_URL: url })});
 }
 
 function run(port) {
